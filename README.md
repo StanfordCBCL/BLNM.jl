@@ -36,11 +36,12 @@ Note that a suitable MPI implementation should be installed in order to run the 
 ## References
 ```bibtex
 @article{Salvador2023BLNM,
-  title={Branched Latent Neural Operators},
+  title={Branched Latent Neural Maps},
   author={Salvador, M. and Marsden, A. L.},
-  journal={arXiv},
-  year={2023},
-  url={http://arxiv.org/abs/2308.02599}
+  journal={Computer Methods in Applied Mechanics and Engineering},
+  volume={418},
+  pages={116499},
+  year={2023}
 }
 ```
 
