@@ -161,7 +161,7 @@ ho = @phyperopt for resources = num_iters,
     output_file_BLNM = output_file_BLNM * Base.string(neurons) * "-"
   end
   output_file_BLNM = Base.chop(output_file_BLNM, tail = 1)
-  output_file_BLNM = output_file_BLNM * "_states" * Base.string(num_states) * "_disentanglement" * Base.string(disentanglement_level) * "_trainvalid-indices" * Base.string(train_valid_indices[1]) * ":" * Base.string(train_valid_indices[end]) * "_K" * Base.string(rank + 1) * ".bson"
+  output_file_BLNM = output_file_BLNM * "_states" * Base.string(num_states) * "_disentanglement" * Base.string(disentanglement_level) * "_trainvalid-indices" * Base.string(train_valid_indices[1]) * ":" * Base.string(train_valid_indices[end]) * "_K" * Base.string(rank + 1) * "_HLHS_ECGs.bson"
   @save output_file_BLNM NN
 
   # Synchronize processes before hyperparameters tuning.
@@ -177,7 +177,7 @@ ho = @phyperopt for resources = num_iters,
     InOut.write_csv(output_folder * "hyperparameters_seed" * Base.string(seed) * ".csv", df)
   end
   push!(df_rank, [neuron layer num_states disentanglement_level loss_valid])
-  InOut.write_csv(output_folder * "hyperparameters_rank" * Base.string(rank) * "_seed" * Base.string(seed) * ".csv", df_rank)
+  InOut.write_csv(output_folder * "hyperparameters_rank" * Base.string(rank) * "_seed" * Base.string(seed) * "_HLHS_ECGs.csv", df_rank)
 
   # Synchronize processes after hyperparameters tuning.
   MPI.Barrier(comm)
@@ -188,5 +188,5 @@ end
 
 if (rank == root)
   Plots.plot(ho)
-  Plots.savefig(output_folder * "hypertuning_seed" * Base.string(seed) * ".png")
+  Plots.savefig(output_folder * "hypertuning_seed" * Base.string(seed) * "_HLHS_ECGs.png")
 end

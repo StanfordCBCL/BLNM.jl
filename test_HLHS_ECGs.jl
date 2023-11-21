@@ -13,7 +13,7 @@ using .BLNM
 # Path to dataset with the ECGs from electrophysiology simulations.
 dataset_file = "data/ECGs_HLHS.pkl"
 # Path to the trained Branched Latent Neural Map.
-BLNM_file = "NNs/BLNM_19-19-19-19-19-19-19_states10_disentanglement2_train-indices1:150.bson"
+BLNM_file = "NNs/BLNM_19-19-19-19-19-19-19_states10_disentanglement2_train-indices1:150_HLHS_ECGs.bson"
 # Path to the figures folder.
 figs_folder = "figs/"
 # Indices of the testing set.
@@ -74,7 +74,7 @@ for idx_out in 1 : num_outs
   end
   Plots.plot(plots...)
   Plots.plot!(size = (1800, 1800))
-  fig_file = figs_folder * "test_physical" * Base.string(idx_out) * "_indices" * Base.string(indices[1]) * ":" * Base.string(indices[end]) * ".pdf"
+  fig_file = figs_folder * "test_physical" * Base.string(idx_out) * "_indices" * Base.string(indices[1]) * ":" * Base.string(indices[end]) * "_HLHS_ECGs.pdf"
   Plots.savefig(fig_file)
 end
 
@@ -87,6 +87,6 @@ for idx_state in (num_outs + 1) : num_states
   end
   Plots.plot(plots...)
   Plots.plot!(size = (1800, 1800))
-  fig_file = figs_folder * "test_latent" * Base.string(idx_state) * "_indices" * Base.string(indices[1]) * ":" * Base.string(indices[end]) * ".pdf"
+  fig_file = figs_folder * "test_latent" * Base.string(idx_state) * "_indices" * Base.string(indices[1]) * ":" * Base.string(indices[end]) * "_HLHS_ECGs.pdf"
   Plots.savefig(fig_file)
 end

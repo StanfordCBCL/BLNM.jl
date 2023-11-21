@@ -96,7 +96,7 @@ NN = BLNM.build_BLNM(neurons_per_layer, 1, num_params, num_states, disentangleme
 Flux.loadparams!(NN, map(p -> p .= randn.(), Flux.params(NN)))
 ps = Flux.params(NN)
 
-# Callback function for the training phase.
+# Callback function.
 function cb(x)
   epoch = -1
   if Base.hasproperty(x, :iteration)
@@ -133,5 +133,5 @@ for neurons in neurons_per_layer
   global output_file = output_file * Base.string(neurons) * "-"
 end
 output_file = Base.chop(output_file, tail = 1)
-output_file = output_file * "_states" * Base.string(num_states) * "_disentanglement" * Base.string(disentanglement_level) * "_train-indices" * Base.string(train_indices[1]) * ":" * Base.string(train_indices[end]) * ".bson"
+output_file = output_file * "_states" * Base.string(num_states) * "_disentanglement" * Base.string(disentanglement_level) * "_train-indices" * Base.string(train_indices[1]) * ":" * Base.string(train_indices[end]) * "_HLHS_ECGs.bson"
 @save output_file NN
