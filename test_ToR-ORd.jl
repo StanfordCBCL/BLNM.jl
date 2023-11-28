@@ -39,13 +39,13 @@ for idx in 1 : num_simulations
   times_adim[1, :, idx] = times / tspan[2]
 end
 # Parameters (cell-level conductances: [GNa, Gto, GNaL, GKr, GKs, GK1, GKb, Gncx, Pnak, PNab, PCab, GpCa, GClCa, GClb]).
-params = BLNM.interpolate(dataset["parameters"], dataset["times"], times)
+params = Utils.interpolate_linear(dataset["parameters"], dataset["times"], times)
 num_params = Base.size(params)[1]
 params_min = Base.findmin(params, dims = (2, 3, 4))[1]
 params_max = Base.findmax(params, dims = (2, 3, 4))[1]
 params_adim = BLNM.adimensionalize(params, params_min, params_max)
 # Outputs (action potential at limit cycle).
-outputs = BLNM.interpolate(dataset["outputs"], dataset["times"], times)
+outputs = Utils.interpolate_linear(dataset["outputs"], dataset["times"], times)
 num_outs = Base.size(outputs)[1]
 out_min = Base.findmin(outputs, dims = (2, 3, 4))[1]
 out_max = Base.findmax(outputs, dims = (2, 3, 4))[1]

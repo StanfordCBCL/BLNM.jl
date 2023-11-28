@@ -6,48 +6,21 @@ using Interpolations
 using Zygote
 
 """
-Transform a 3D `tensor` into the adimensional range [-1, 1].
+Transform a 3D `tensor` or a 2D `matrix` into the adimensional range [-1, 1].
 """
-function adimensionalize(tensor::Array{Float64, 3}, tensor_min::Array{Float64, 3}, tensor_max::Array{Float64, 3})::Array{Float64, 3}
-  return (2.0 .* tensor .- tensor_min .- tensor_max) ./ (tensor_max .- tensor_min)
+function adimensionalize(data::Union{Matrix, Array{Float64, 3}},
+                         data_min::Union{Matrix, Array{Float64, 3}},
+                         data_max::Union{Matrix, Array{Float64, 3}})::Union{Matrix, Array{Float64, 3}}
+  return (2.0 .* data .- data_min .- data_max) ./ (data_max .- data_min)
 end
 
 """
-Transform a 2D `matrix` into the adimensional range [-1, 1].
+Transform a 3D tensor or a 2D matrix `data` into the original range [`data_min`, `data_max`].
 """
-function adimensionalize(matrix::Matrix{Float64}, matrix_min::Matrix{Float64}, matrix_max::Matrix{Float64})::Matrix{Float64}
-  return (2.0 .* matrix .- matrix_min .- matrix_max) ./ (matrix_max .- matrix_min)
-end
-
-"""
-Transform a 3D `tensor` into the original range [`tensor_min`, `tensor_max`].
-"""
-function dimensionalize(tensor::Array{Float64, 3}, tensor_min::Array{Float64, 3}, tensor_max::Array{Float64, 3})::Array{Float64, 3}
-  return (tensor_min .+ tensor_max .+ (tensor_max .- tensor_min) .* tensor) ./ 2
-end
-"""
-Transform a 2D `matrix` into the original range [`matrix_min`, `matrix_max`].
-"""
-function dimensionalize(matrix::Matrix{Float64}, matrix_min::Matrix{Float64}, matrix_max::Matrix{Float64})::Matrix{Float64}
-  return (matrix_min .+ matrix_max .+ (matrix_max .- matrix_min) .* matrix) ./ 2
-end
-
-"""
-Interpolate a generic 3D `tensor`, defined on a `times` vector, onto a different `times_interp` vector.
-"""
-function interpolate(tensor::Array{Float64, 3},
-                     times::Vector{Float64},
-                     times_interp::StepRangeLen{Float64, Base.TwicePrecision{Float64}, Base.TwicePrecision{Float64}, Int64})::Array{Float64, 3}
-  (num_variables, num_times, num_samples) = Base.size(tensor)
-  tensor_interp = Array{Float64, 3}(undef, num_variables, Base.length(times_interp), num_samples)
-  Threads.@threads for idx_s in 1 : num_samples
-    Threads.@threads for idx_v in 1 : num_variables
-      linear_interp = Interpolations.linear_interpolation(times, tensor[idx_v, :, idx_s])
-      tensor_interp[idx_v, :, idx_s] = linear_interp(times_interp)
-    end
-  end
-
-  return tensor_interp
+function dimensionalize(data::Union{Matrix, Array{Float64, 3}},
+                        data_min::Union{Matrix, Array{Float64, 3}},
+                        data_max::Union{Matrix, Array{Float64, 3}})::Union{Matrix, Array{Float64, 3}}
+  return (data_min .+ data_max .+ (data_max .- data_min) .* data) ./ 2
 end
 
 """
@@ -110,20 +83,12 @@ end
 
 """
 Mean Square Error (MSE) loss function for a `BLNM` receiving `input_1` and `input_2` as inputs
-, comparing the predictions with `output`, as 3D tensors.
+, comparing the predictions with `output`, as 3D tensors or 2D matrices.
 """
 function loss_MSE_BLNM(BLNM::Chain{Vector{Any}},
-                       input_1::Array{Float64, 3}, input_2::Array{Float64, 3},
-                       output::Array{Float64, 3})::Float64
-  return Flux.mse(BLNM((input_1, input_2))[1 : Base.size(output)[1], :, :], output)
-end
-"""
-Mean Square Error (MSE) loss function for a `BLNM` receiving `input_1` and `input_2` as inputs
-, comparing the predictions with `output`, as 2D matrices.
-"""
-function loss_MSE_BLNM(BLNM::Chain{Vector{Any}},
-                       input_1::Matrix{Float64}, input_2::Matrix{Float64},
-                       output::Matrix{Float64})::Float64
+                       input_1::Union{Matrix, Array{Float64, 3}},
+                       input_2::Union{Matrix, Array{Float64, 3}},
+                       output::Union{Matrix, Array{Float64, 3}})::Float64
   return Flux.mse(BLNM((input_1, input_2))[1 : Base.size(output)[1], :, :], output)
 end
 

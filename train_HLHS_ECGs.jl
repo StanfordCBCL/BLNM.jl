@@ -64,13 +64,13 @@ for idx in 1 : num_simulations
   times_adim[1, :, idx] = times / tspan[2]
 end
 # Import parameters in the adimensional range [-1, 1].
-params_adim = BLNM.interpolate(dataset["parameters"], dataset["times"], times)
+params_adim = Utils.interpolate_linear(dataset["parameters"], dataset["times"], times)
 num_params = Base.size(params_adim)[1]
 # Maximum and minimum of [tLVstim, GNa, GCaL, GKr, Dpurk, Dani, Diso] in the original range.
 params_min = Array{Float64, 3}(undef, num_params, 1, 1) .= [0.1950 , 7.5400 , 2.0365e-5, 0.0771, 1.0027, 0.0084, 0.0028]
 params_max = Array{Float64, 3}(undef, num_params, 1, 1) .= [99.3059, 29.4130, 7.9358e-5, 0.3057, 3.4826, 0.0331, 0.0110]
 # Import outputs in the adimensional range [-1, 1].
-outputs_adim = BLNM.interpolate(dataset["outputs"], dataset["times"], times)
+outputs_adim = Utils.interpolate_linear(dataset["outputs"], dataset["times"], times)
 num_outs = Base.size(outputs_adim)[1]
 # Maximum and minimum of [V1, V2, V3, V4, V5, V6, RA, LA, F] in the original range.
 out_min = Array{Float64, 3}(undef, num_outs, 1, 1) .= [-4.3731, -4.2820, -3.0456, -3.1056, -4.6857, -2.0958, -1.2211, -0.9557, -0.7815]
