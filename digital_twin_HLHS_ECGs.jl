@@ -15,9 +15,10 @@ using BSON: @load
 # I/O features.
 include("./src/InOut.jl")
 using .InOut
-# Utilities.
+# Branched Latent Neural Maps.
 include("./src/BLNM.jl")
 using .BLNM
+# Utilities.
 include("./src/Utils.jl")
 using .Utils
 
