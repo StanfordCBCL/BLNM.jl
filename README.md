@@ -9,7 +9,7 @@ For the case of inputs given by time and model parameters coming, for instance, 
 
 $\mathbf{z}(t) = \mathcal{B L \kern0.05em N \kern-0.05em M} \left(t, \boldsymbol{\theta}; \mathbf{w} \right) \text{ for } t \in [0, T].$
 
-This feedforward partially-connected neural network is represented by weights and biases $\mathbf{w} \in \mathbb{R}^{N_\mathrm{w}}$, and introduces a map $\mathcal{B L \kern0.05em N \kern-0.05em M} \colon \mathbb{R}^{1 + N_\mathcal{P}} \to \mathbb{R}^{N_\mathrm{z}}$ from time $t$ and model parameters $\boldsymbol{\theta} \in \boldsymbol{\Theta} \subset \mathbb{R}^{N_\mathcal{P}}$ to a state vector $\mathbf{z}(t) = [\mathbf{z}_ \mathrm{physical}(t), \mathbf{z}_ \mathrm{latent}(t)]^T$.
+This partially-connected neural network is represented by weights and biases $\mathbf{w} \in \mathbb{R}^{N_\mathrm{w}}$, and introduces a map $\mathcal{B L \kern0.05em N \kern-0.05em M} \colon \mathbb{R}^{1 + N_\mathcal{P}} \to \mathbb{R}^{N_\mathrm{z}}$ from time $t$ and model parameters $\boldsymbol{\theta} \in \boldsymbol{\Theta} \subset \mathbb{R}^{N_\mathcal{P}}$ to a state vector $\mathbf{z}(t) = [\mathbf{z}_ \mathrm{physical}(t), \mathbf{z}_ \mathrm{latent}(t)]^T$.
 The state vector $\mathrm{z}(t) \in \mathbb{R}^{N_\mathrm{z}}$ contains $\mathbf{z}_ \mathrm{physical}(t)$ physical fields of interest, as well as interpretable $\mathbf{z}_\mathrm{latent}(t)$ latent temporal variables without a direct physical representation, that enhance the learned dynamics of the BLNM.
 During the optimization process of the neural network tunable parameters, the Mean Square Error (MSE) between the BLNM outputs and observations, both in non-dimensional form, is minimized.
 Time and model parameters are also normalized during the training phase of the BLNM.
@@ -18,20 +18,24 @@ This package can be seamlessly extended to include more than two branches involv
 
 ## Getting started
 
-To reproduce the results of the original paper, make sure to activate the environment contained in `Project.toml` with `julia 1.8.5` installed.
+Make sure to activate the environment contained in `Project.toml` with `julia 1.8.5` installed.
 
-To train a single BLNM with user-defined parameters, running `train.jl` within the Julia REPL is recommended.
-Once the BLNM is trained, the mean square error on the training and testing datasets can be computed and some plots can be shown by calling `test.jl`.
+The repository currently contains three different test cases:
+* Create a geometry-specific surrogate model to reproduce in silico 12-lead electrocardiograms (ECGs) while spanning 7 cell-to-organ level model parameters (`train_HLHS_ECGs.jl`, `train_hyperopt_HLHS_ECGs.jl`, `test_HLHS_ECGs.jl`)
+* Digital twinning of cardiac electrophysiology to match clinical 12-lead ECGs (`digital_twin_HLHS_ECGs.jl`)
+* Create a cell-based surrogate model that simulates the action potential of the [Tomek Rodriguez-O'Hara Rudy (ToR-ORd) ionic model](https://elifesciences.org/articles/48890) at limit cycle while spanning 14 relevant cellular conductances (`train_ToR-ORd.jl`, `test_ToR-ORd.jl`)
+
+For the sake of illustration on the first test case, a BLNM with user-defined parameters can be trained by running `train_HLHS_ECGs.jl` within the Julia REPL.
+Once the BLNM is trained, the mean square error on the training and testing datasets can be computed and some plots can be shown by calling `test_HLHS_ECGs.jl`.
 Running `import Pkg; Pkg.instantiate()` is usually necessary to properly initialize the environment within the Julia REPL.
-
 MPI-based hyperparameters tuning with K-fold cross-validation should be run in a bash terminal by typing:
 ```julia
-mpirun -n K julia --project=. train_hyperopt.jl
+mpirun -n K julia --project=. train_hyperopt_HLHS_ECGs.jl
 ```
 where K represents the number of K-folds.
 Note that a suitable MPI implementation should be installed in order to run the last command.
 
-`InOut.jl` contains input-output features, whereas `BLNM.jl` defines BLNMs implementation.
+`BLNM.jl` defines the actual BLNMs implementation, `InOut.jl` contains input-output features and `Utils.jl` introduces some generic utilities.
 
 ## References
 ```bibtex
@@ -44,6 +48,13 @@ Note that a suitable MPI implementation should be installed in order to run the 
   year={2024}
 }
 ```
-
+```bibtex
+@article{Salvador2023DT,
+  title={Digital twinning of cardiac electrophysiology for congenital heart disease},
+  author={Salvador, M. and Kong, F. and Peirlinck, M. and Parker, D. and Chubb, H. and Dubin, A. and Marsden, A. L.},
+  journal={bioRxiv 2023.11.27.568942},
+  year={2023}
+}
+```
 ## License
 `BLNM.jl` is released under the MIT license.
