@@ -49,11 +49,11 @@ Note that a suitable MPI implementation should be installed in order to run the 
 }
 ```
 ```bibtex
-@article{Salvador2023DT,
+@article{Salvador2024DT,
   title={Digital twinning of cardiac electrophysiology for congenital heart disease},
   author={Salvador, M. and Kong, F. and Peirlinck, M. and Parker, D. and Chubb, H. and Dubin, A. and Marsden, A. L.},
-  journal={bioRxiv 2023.11.27.568942},
-  year={2023}
+  journal={Journal of the Royal Society Interface},
+  year={2024}
 }
 ```
 ## License
